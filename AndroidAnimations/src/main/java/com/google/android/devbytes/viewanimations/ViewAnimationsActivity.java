@@ -1,18 +1,13 @@
 package com.google.android.devbytes.viewanimations;
 
+import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.View;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.AnimationUtils;
-import android.view.animation.RotateAnimation;
-import android.view.animation.ScaleAnimation;
-import android.view.animation.TranslateAnimation;
-import android.widget.Button;
-import android.widget.CheckBox;
 
 /**
  * This example shows how to use pre-3.0 view Animation classes to create various animated UI
@@ -24,69 +19,30 @@ import android.widget.CheckBox;
  */
 public class ViewAnimationsActivity extends Activity {
 
-    CheckBox mCheckBox;
-
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_animations);
+        // Notice the setContentView() is not used, because we use the root
+        // android.R.id.content as the container for each fragment
+        //setContentView(R.layout.activity_view_animations);
 
-        // Get a reference to the Views to be animated
-        mCheckBox = (CheckBox) findViewById(R.id.checkbox);
-        final Button alphaButton = (Button) findViewById(R.id.alphaButton);
-        final Button translateButton = (Button) findViewById(R.id.translateButton);
-        final Button rotateButton = (Button) findViewById(R.id.rotateButton);
-        final Button scaleButton = (Button) findViewById(R.id.scaleButton);
-        final Button setButton = (Button) findViewById(R.id.setButton);
+        // setup action bar for tabs
+        ActionBar actionBar = getActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionBar.setDisplayShowTitleEnabled(false);
 
-        // Fade the button out and back in
-        final AlphaAnimation alphaAnimation = new AlphaAnimation(1, 0);
-        alphaAnimation.setDuration(1000);
+        ActionBar.Tab tab = actionBar.newTab().setText(R.string.alpha).setTabListener(new TabListener<AlphaFragment>(this, "alpha", AlphaFragment.class));
+        actionBar.addTab(tab);
 
-        // Move the button over and then back
-        final TranslateAnimation translateAnimation =
-                new TranslateAnimation(Animation.ABSOLUTE, 0,
-                        Animation.RELATIVE_TO_PARENT, 1,
-                        Animation.ABSOLUTE, 0,
-                        Animation.ABSOLUTE, 100);
-        translateAnimation.setDuration(1000);
+        tab = actionBar.newTab().setText(R.string.translate).setTabListener(new TabListener<TranslateFragment>(this, "translate", TranslateFragment.class));
+        actionBar.addTab(tab);
 
-        // Spin the button around in a full circle
-        final RotateAnimation rotateAnimation = new RotateAnimation(0, 360,
-                Animation.RELATIVE_TO_SELF, .5F,
-                Animation.RELATIVE_TO_SELF, .5F);
-        rotateAnimation.setDuration(1000);
+        tab = actionBar.newTab().setText(R.string.rotate).setTabListener(new TabListener<RotateFragment>(this, "rotate", RotateFragment.class));
+        actionBar.addTab(tab);
 
-        // Scale the button in X and Y
-        final ScaleAnimation scaleAnimation = new ScaleAnimation(1, 2, 1, 2);
-        scaleAnimation.setDuration(1000);
-
-        // Run the animations above in sequence on the final button. Looks horrible.
-        final AnimationSet setAnimation = new AnimationSet(true);
-        setAnimation.addAnimation(alphaAnimation);
-        setAnimation.addAnimation(translateAnimation);
-        setAnimation.addAnimation(rotateAnimation);
-        setAnimation.addAnimation(scaleAnimation);
-
-        setupAnimation(alphaButton, alphaAnimation, R.anim.alpha_anim);
-        setupAnimation(translateButton, translateAnimation, R.anim.translate_anim);
-        setupAnimation(rotateButton, rotateAnimation, R.anim.rotate_anim);
-        setupAnimation(scaleButton, scaleAnimation, R.anim.scale_anim);
-        setupAnimation(setButton, setAnimation, R.anim.set_anim);
-    }
-
-    private void setupAnimation(View view, final Animation animation, final int animationID) {
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // If the Checkbox is checked, load the animation from the given resource id
-                // instead of using the passed-in animation parameter. See the XML files
-                // for the details on those animation declarations.
-                view.startAnimation(mCheckBox.isChecked()
-                        ? AnimationUtils.loadAnimation(ViewAnimationsActivity.this, animationID)
-                        : animation);
-            }
-        });
+        tab = actionBar.newTab().setText(R.string.scale).setTabListener(new TabListener<ScaleFragment>(this, "scale", ScaleFragment.class));
+        actionBar.addTab(tab);
     }
 
     @Override
@@ -96,4 +52,45 @@ public class ViewAnimationsActivity extends Activity {
         return true;
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    public static class TabListener<T extends Fragment> implements ActionBar.TabListener {
+
+        private Fragment mFragment;
+        private final Activity mActivity;
+        private final String mTag;
+        private final Class<T> mClass;
+
+        public TabListener(Activity activity, String tag, Class<T> aClass) {
+            mActivity = activity;
+            mTag = tag;
+            mClass = aClass;
+        }
+
+
+        @Override
+        public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+            // Check if the fragment is already initialized
+            if (mFragment == null) {
+                // if not, instantiate and add it to the activity
+                mFragment = Fragment.instantiate(mActivity, mClass.getName());
+                fragmentTransaction.add(android.R.id.content, mFragment, mTag);
+            } else {
+                // if it exists, simply attach it in order to show it
+                fragmentTransaction.attach(mFragment);
+            }
+        }
+
+        @Override
+        public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+            if (mFragment != null) {
+                // Detach the fragment, because another one is being attached
+                fragmentTransaction.detach(mFragment);
+            }
+        }
+
+        @Override
+        public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+            // User selected the already selected tab. Usually do nothing
+        }
+    }
 }

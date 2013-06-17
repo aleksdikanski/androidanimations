@@ -9,40 +9,40 @@
               android:orientation="vertical"
               tools:context=".ViewAnimationsActivity">
 
-    <CheckBox
-            android:id="@+id/checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/use_animation_resources"/>
+    <fragment
+            android:name="com.google.android.devbytes.viewanimations.AlphaFragment"
+            android:id="@+id/alphaFragment"
+            android:tag="@string/alpha"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            tools:layout="@layout/fragment_alpha_anim"/>
 
-    <Button
-            android:id="@+id/alphaButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/alpha"/>
+    <fragment
+            android:name="com.google.android.devbytes.viewanimations.TranslateFragment"
+            android:id="@+id/translateFragment"
+            android:tag="@string/translate"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            tools:layout="@layout/fragment_translate_anim"/>
 
-    <Button
-            android:id="@+id/translateButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/translate"/>
+    <fragment
+            android:name="com.google.android.devbytes.viewanimations.RotateFragment"
+            android:id="@+id/rotateFragment"
+            android:tag="@string/rotate"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            tools:layout="@layout/fragment_rotate_anim"/>
 
-    <Button
-            android:id="@+id/rotateButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/rotate"/>
-
-    <Button
-            android:id="@+id/scaleButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/scale"/>
-
-    <Button
-            android:id="@+id/setButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/set"/>
+    <fragment
+            android:name="com.google.android.devbytes.viewanimations.ScaleFragment"
+            android:id="@+id/scaleFragment"
+            android:tag="@string/scale"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            tools:layout="@layout/fragment_scale_anim"/>
 
 </LinearLayout>
