@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">ViewAnimations</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="use_animation_resources">Use Animation Resources</string>
+    <string name="alpha">Alpha</string>
+    <string name="translate">Translate</string>
+    <string name="rotate">Rotate</string>
+    <string name="scale">Scale</string>
+    <string name="set">Set</string>
+
+</resources>
